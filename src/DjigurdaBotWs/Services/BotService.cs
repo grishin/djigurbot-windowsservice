@@ -75,10 +75,10 @@ namespace DjigurdaBotWs.Services
 
                 await _bot.SendTextMessageAsync(message.Chat.Id, _toastService.GetRandomToast());
             }
-         /*   else if (message.Text.ToLowerInvariant().Contains("костя"))
+            else if (message.Text.ToLowerInvariant().Contains("костя"))
             {
-                await _bot.SendTextMessageAsync(message.Chat.Id, "Костя, не болей!");
-            } */
+                await _bot.SendTextMessageAsync(message.Chat.Id, "Костя крутой!");
+            } 
             else if (message.Text.ToLowerInvariant().Contains("вода сколько"))
             {
                 var bottlesCount = _waterService.GetBottlesCount();
@@ -109,7 +109,7 @@ namespace DjigurdaBotWs.Services
                 await _bot.SendTextMessageAsync(message.Chat.Id,
                         $"Мой повелитель, добрые вести! Запасы пополнены. На складах находится {bottlesCount} бутылей воды.");
             }
-        /*    else if (message.Text.ToLowerInvariant().Contains("ааа"))
+            else if (message.Text.ToLowerInvariant().Contains("ааа"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "АААААААААААААААААААААААА!!!");
             }
@@ -120,7 +120,7 @@ namespace DjigurdaBotWs.Services
             else if (message.Text.ToLowerInvariant().Contains("джигурда"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Пора накатить!");
-            } */
+            } 
             else if (message.Text.ToLowerInvariant().Contains("доброе утро"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
@@ -133,7 +133,7 @@ namespace DjigurdaBotWs.Services
             {
                 await _bot.SendTextMessageAsync(TechTalksChatId, message.Text.Replace("/writeTechTalks", "").Trim());
             }
-          /*  else if (message.Text.ToLowerInvariant().Contains("квоты"))
+            else if (message.Text.ToLowerInvariant().Contains("квоты"))
             {
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
                 await Task.Delay(2000);
@@ -154,15 +154,35 @@ namespace DjigurdaBotWs.Services
                 await Task.Delay(1000);
 
                 await _bot.SendTextMessageAsync(message.Chat.Id, "шированы!!");
-            } */
-          /*  else if (message.From.Username.Contains("askmeforproject"))
+            } 
+            else if (message.From.Username.Contains("askmeforproject"))
             {
                 var random = new Random();
-                if (random.Next(10) == 0)
+                if (random.Next(30) == 0)
                 {
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "Даша, ты БОЖЕСТВЕННА!");
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Я ХОЧУ ЕСТЬ ...");
+
+                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                    await Task.Delay(1000);
+
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "м ...");
+
+                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                    await Task.Delay(1000);
+
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "ы ...");
+
+                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                    await Task.Delay(1000);
+
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "л ...");
+
+                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                    await Task.Delay(1000);
+
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "о ...");
                 }
-            }*/
+            }
             else if (message.Text.ToLowerInvariant().Contains("спеть про стаканы"))
             {
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
