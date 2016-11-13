@@ -12,6 +12,9 @@ namespace DjigurdaBotWs.Services
     {
         void Start(string token);
         void Stop();
+
+        void SayTest();
+        void SayMorningGreeting();
     }
 
     public class BotService : IBotService
@@ -234,7 +237,7 @@ namespace DjigurdaBotWs.Services
 
         private async Task SayRandomQuoteAsync(Message message)
         {
-            await _bot.SendTextMessageAsync(message.Chat.Id, "Наступает время умных цитат!");
+            await _bot.SendTextMessageAsync(message.Chat.Id, "Наступает время мотивирующих цитат!");
 
             await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
             await Task.Delay(2000);
@@ -242,6 +245,24 @@ namespace DjigurdaBotWs.Services
             var quote = _quoteService.GetRandomQuote();
 
             await _bot.SendTextMessageAsync(message.Chat.Id, quote.Text + "\n" + quote.Author);
+        }
+
+        public void SayMorningGreeting()
+        {
+            _bot.SendTextMessageAsync(FoodChatId, "Всех с добрым утром!").RunSynchronously();
+            _bot.SendTextMessageAsync(FoodChatId, "Наступает время мотивирующих цитат!").RunSynchronously(); ;
+
+            _bot.SendChatActionAsync(FoodChatId, ChatAction.Typing).RunSynchronously();
+            Task.Delay(2000).RunSynchronously();
+
+            var quote = _quoteService.GetRandomQuote();
+
+            _bot.SendTextMessageAsync(FoodChatId, quote.Text + "\n" + quote.Author).RunSynchronously();
+        }
+
+        public void SayTest()
+        {
+            _bot.SendTextMessageAsync(TechTalksChatId, "Тест").RunSynchronously();
         }
     }
 }

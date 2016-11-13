@@ -10,6 +10,7 @@ using DjigurdaBotWs.Services;
 using NLog;
 using SimpleInjector;
 using Topshelf;
+using FluentScheduler;
 
 namespace DjigurdaBotWs
 {
@@ -61,6 +62,19 @@ namespace DjigurdaBotWs
 
             _logger = serviceProvider.GetInstance<ILogger>();
             _bot = serviceProvider.GetInstance<IBotService>();
+
+            JobManager.Initialize(ConfigureSchedules());
+        }
+
+        public Registry ConfigureSchedules()
+        {
+            var registry = new Registry();
+            registry.Schedule(() =>
+            {
+                _bot.SayMorningGreeting();
+            }).ToRunEvery(1).Weekdays().At(10, 0);
+            
+            return registry;
         }
 
         /// <summary>
