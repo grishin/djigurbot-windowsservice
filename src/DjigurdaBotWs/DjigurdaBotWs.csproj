@@ -89,9 +89,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Quote.cs" />
     <Compile Include="Repositories\IWaterRepository.cs" />
     <Compile Include="Repositories\WaterFileRepository.cs" />
     <Compile Include="Services\BotService.cs" />
+    <Compile Include="Services\QuoteService.cs" />
     <Compile Include="Services\ToastService.cs" />
     <Compile Include="Services\WaterService.cs" />
     <Compile Include="Program.cs" />

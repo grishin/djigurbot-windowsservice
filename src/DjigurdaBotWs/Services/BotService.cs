@@ -21,17 +21,19 @@ namespace DjigurdaBotWs.Services
 
         private readonly IToastService _toastService;
         private readonly IWaterService _waterService;
+        private readonly IQuoteService _quoteService;
         private readonly ILogger _messageLogger;
         private readonly ILogger _exceptionLogger;
 
         private TelegramBotClient _bot;
 
-        public BotService(IToastService toastService, IWaterService waterService)
+        public BotService(IToastService toastService, IWaterService waterService, IQuoteService quoteService)
         {
             _toastService = toastService;
             _messageLogger = LogManager.GetLogger("message");
             _exceptionLogger = LogManager.GetCurrentClassLogger();
             _waterService = waterService;
+            _quoteService = quoteService;
         }
 
         public void Start(string token)
@@ -112,6 +114,10 @@ namespace DjigurdaBotWs.Services
             else if (message.Text.ToLowerInvariant().Contains("ааа"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "АААААААААААААААААААААААА!!!");
+            }
+            else if (message.Text.ToLowerInvariant().Contains("цитата сказать"))
+            {
+                await SayRandomQuoteAsync(message);
             }
             else if (message.Text.ToLowerInvariant().Contains("артемий"))
             {
@@ -224,6 +230,18 @@ namespace DjigurdaBotWs.Services
                     _bot.SendAudioAsync(message.Chat.Id, "http://tiburon-research.ru/files/leps.mp3", 4 * 60 + 23, "Григорий Лепс",
                         "Рюмка водки на столе");
             }
+        }
+
+        private async Task SayRandomQuoteAsync(Message message)
+        {
+            await _bot.SendTextMessageAsync(message.Chat.Id, "Наступает время умных цитат!");
+
+            await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+            await Task.Delay(2000);
+
+            var quote = _quoteService.GetRandomQuote();
+
+            await _bot.SendTextMessageAsync(message.Chat.Id, quote.Text + "\n" + quote.Author);
         }
     }
 }

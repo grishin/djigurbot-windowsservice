@@ -119,6 +119,7 @@ namespace DjigurdaBotWs
             container.Register<IWaterRepository, WaterFileRepository>(Lifestyle.Singleton);
             container.Register<IToastService, ToastService>(Lifestyle.Singleton);
             container.Register<IWaterService, WaterService>(Lifestyle.Singleton);
+            container.Register<IQuoteService, QuoteService>(Lifestyle.Singleton);
 
             container.Verify();
             return container;
