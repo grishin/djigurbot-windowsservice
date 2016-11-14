@@ -83,7 +83,7 @@ namespace DjigurdaBotWs.Services
             else if (message.Text.ToLowerInvariant().Contains("костя"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Костя крутой!");
-            } 
+            }
             else if (message.Text.ToLowerInvariant().Contains("вода сколько"))
             {
                 var bottlesCount = _waterService.GetBottlesCount();
@@ -129,7 +129,7 @@ namespace DjigurdaBotWs.Services
             else if (message.Text.ToLowerInvariant().Contains("джигурда"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Пора накатить!");
-            } 
+            }
             else if (message.Text.ToLowerInvariant().Contains("доброе утро"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
@@ -163,7 +163,7 @@ namespace DjigurdaBotWs.Services
                 await Task.Delay(1000);
 
                 await _bot.SendTextMessageAsync(message.Chat.Id, "шированы!!");
-            } 
+            }
             else if (message.From.Username.Contains("askmeforproject"))
             {
                 var random = new Random();
@@ -233,6 +233,10 @@ namespace DjigurdaBotWs.Services
                     _bot.SendAudioAsync(message.Chat.Id, "http://tiburon-research.ru/files/leps.mp3", 4 * 60 + 23, "Григорий Лепс",
                         "Рюмка водки на столе");
             }
+            else if (message.Text.ToLowerInvariant().Contains("__тест__"))
+            {
+                SayMorningGreeting();
+            }
         }
 
         private async Task SayRandomQuoteAsync(Message message)
@@ -249,20 +253,28 @@ namespace DjigurdaBotWs.Services
 
         public void SayMorningGreeting()
         {
-            _bot.SendTextMessageAsync(FoodChatId, "Всех с добрым утром!").RunSynchronously();
-            _bot.SendTextMessageAsync(FoodChatId, "Наступает время мотивирующих цитат!").RunSynchronously(); ;
+            var task = Task.Run(async () =>
+            {
+                await _bot.SendTextMessageAsync(FoodChatId, "Всех с добрым утром!");
+                await _bot.SendTextMessageAsync(FoodChatId, "Наступает время мотивирующих цитат!");
 
-            _bot.SendChatActionAsync(FoodChatId, ChatAction.Typing).RunSynchronously();
-            Task.Delay(2000).RunSynchronously();
+                await _bot.SendChatActionAsync(FoodChatId, ChatAction.Typing);
+                await Task.Delay(2000);
 
-            var quote = _quoteService.GetRandomQuote();
+                var quote = _quoteService.GetRandomQuote();
 
-            _bot.SendTextMessageAsync(FoodChatId, quote.Text + "\n" + quote.Author).RunSynchronously();
+                await _bot.SendTextMessageAsync(FoodChatId, quote.Text + "\n" + quote.Author);
+            });
+            task.Wait();
         }
 
         public void SayTest()
         {
-            _bot.SendTextMessageAsync(TechTalksChatId, "Тест").RunSynchronously();
+            var task = Task.Run(async () =>
+            {
+                await _bot.SendTextMessageAsync(TechTalksChatId, "Тест");
+            });
+            task.Wait();            
         }
     }
 }
