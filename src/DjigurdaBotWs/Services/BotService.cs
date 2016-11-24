@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using NLog;
 using Telegram.Bot;
@@ -27,6 +29,7 @@ namespace DjigurdaBotWs.Services
         private readonly IQuoteService _quoteService;
         private readonly ILogger _messageLogger;
         private readonly ILogger _exceptionLogger;
+        private readonly Random _random;
 
         private TelegramBotClient _bot;
 
@@ -37,6 +40,7 @@ namespace DjigurdaBotWs.Services
             _exceptionLogger = LogManager.GetCurrentClassLogger();
             _waterService = waterService;
             _quoteService = quoteService;
+            _random = new Random();
         }
 
         public void Start(string token)
@@ -112,7 +116,7 @@ namespace DjigurdaBotWs.Services
                 }
 
                 await _bot.SendTextMessageAsync(message.Chat.Id,
-                        $"Мой повелитель, добрые вести! Запасы пополнены. На складах находится {bottlesCount} бутылей воды.");
+                    $"Мой повелитель, добрые вести! Запасы пополнены. На складах находится {bottlesCount} бутылей воды.");
             }
             else if (message.Text.ToLowerInvariant().Contains("ааа"))
             {
@@ -132,7 +136,8 @@ namespace DjigurdaBotWs.Services
             }
             else if (message.Text.ToLowerInvariant().Contains("доброе утро"))
             {
-                await _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
+                await
+                    _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
             }
             else if (message.Text.StartsWith("/writeFood"))
             {
@@ -164,7 +169,7 @@ namespace DjigurdaBotWs.Services
 
                 await _bot.SendTextMessageAsync(message.Chat.Id, "шированы!!");
             }
-            else if (message.From.Username.Contains("askmeforproject"))
+            /* else if (message.From.Username.Contains("askmeforproject"))
             {
                 var random = new Random();
                 if (random.Next(30) == 0)
@@ -191,7 +196,7 @@ namespace DjigurdaBotWs.Services
 
                     await _bot.SendTextMessageAsync(message.Chat.Id, "о ...");
                 }
-            }
+            } */
             else if (message.Text.ToLowerInvariant().Contains("спеть про стаканы"))
             {
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
@@ -226,16 +231,28 @@ namespace DjigurdaBotWs.Services
                 await Task.Delay(1000);
                 await _bot.SendTextMessageAsync(message.Chat.Id, "А я говорю, что буду!");
             }
-            else if (message.Text.ToLowerInvariant().Contains("спеть лепс"))
+            else if (message.Text.ToLowerInvariant().Contains("лепс спеть"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Щас спою ......");
                 await
-                    _bot.SendAudioAsync(message.Chat.Id, "http://tiburon-research.ru/files/leps.mp3", 4 * 60 + 23, "Григорий Лепс",
+                    _bot.SendAudioAsync(message.Chat.Id, "http://tiburon-research.ru/files/leps.mp3", 4 * 60 + 23,
+                        "Григорий Лепс",
                         "Рюмка водки на столе");
             }
             else if (message.Text.ToLowerInvariant().Contains("__тест__"))
             {
                 SayMorningGreeting();
+            }
+            else if (message.Text.ToLowerInvariant().Contains("котик прислать") || _random.Next(50) == 0)
+            {
+                await _bot.SendTextMessageAsync(message.Chat.Id, "Кстати, зацени, какую фоточку котика я нашел!", replyToMessageId: message.MessageId);
+                await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
+                using (var memoryStream = new MemoryStream(new WebClient().DownloadData("http://thecatapi.com/api/images/get?format=src&type=gif")))
+                {
+                    var filename = $"{Guid.NewGuid().ToString().ToLower()}.gif";
+                    var fileToSend = new FileToSend() { Filename = filename, Content = memoryStream };
+                    await _bot.SendPhotoAsync(message.Chat.Id, fileToSend);
+                }
             }
         }
 
@@ -274,7 +291,7 @@ namespace DjigurdaBotWs.Services
             {
                 await _bot.SendTextMessageAsync(TechTalksChatId, "Тест");
             });
-            task.Wait();            
+            task.Wait();
         }
     }
 }
