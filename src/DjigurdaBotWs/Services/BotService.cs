@@ -243,7 +243,7 @@ namespace DjigurdaBotWs.Services
             {
                 SayMorningGreeting();
             }
-            else if (message.Text.ToLowerInvariant().Contains("котик прислать") || _random.Next(50) == 0)
+            else if (message.Text.ToLowerInvariant().Contains("котик прислать") || _random.Next(150) == 0)
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Кстати, зацени, какую фоточку котика я нашел!", replyToMessageId: message.MessageId);
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
