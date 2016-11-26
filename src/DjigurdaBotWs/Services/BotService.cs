@@ -143,60 +143,60 @@ namespace DjigurdaBotWs.Services
             {
                 await _bot.SendTextMessageAsync(FoodChatId, message.Text.Replace("/writeFood", "").Trim());
             }
-            else if (message.Text.StartsWith("/writeTechTalks"))
-            {
-                await _bot.SendTextMessageAsync(TechTalksChatId, message.Text.Replace("/writeTechTalks", "").Trim());
-            }
-            else if (message.Text.ToLowerInvariant().Contains("квоты"))
-            {
-                await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                await Task.Delay(2000);
+            /*   else if (message.Text.StartsWith("/writeTechTalks"))
+              {
+                  await _bot.SendTextMessageAsync(TechTalksChatId, message.Text.Replace("/writeTechTalks", "").Trim());
+              }
+               else if (message.Text.ToLowerInvariant().Contains("квоты"))
+               {
+                   await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                   await Task.Delay(2000);
 
-                await _bot.SendTextMessageAsync(message.Chat.Id, "Квоты ...");
+                   await _bot.SendTextMessageAsync(message.Chat.Id, "Квоты ...");
 
-                await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                await Task.Delay(1000);
+                   await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                   await Task.Delay(1000);
 
-                await _bot.SendTextMessageAsync(message.Chat.Id, "про ...");
+                   await _bot.SendTextMessageAsync(message.Chat.Id, "про ...");
 
-                await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                await Task.Delay(1000);
+                   await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                   await Task.Delay(1000);
 
-                await _bot.SendTextMessageAsync(message.Chat.Id, "кэ ...");
+                   await _bot.SendTextMessageAsync(message.Chat.Id, "кэ ...");
 
-                await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                await Task.Delay(1000);
+                   await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                   await Task.Delay(1000);
 
-                await _bot.SendTextMessageAsync(message.Chat.Id, "шированы!!");
-            }
-            /* else if (message.From.Username.Contains("askmeforproject"))
-            {
-                var random = new Random();
-                if (random.Next(30) == 0)
-                {
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "Я ХОЧУ ЕСТЬ ...");
+                   await _bot.SendTextMessageAsync(message.Chat.Id, "шированы!!");
+               }
+               else if (message.From.Username.Contains("askmeforproject"))
+               {
+                   var random = new Random();
+                   if (random.Next(30) == 0)
+                   {
+                       await _bot.SendTextMessageAsync(message.Chat.Id, "Я ХОЧУ ЕСТЬ ...");
 
-                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                    await Task.Delay(1000);
+                       await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                       await Task.Delay(1000);
 
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "м ...");
+                       await _bot.SendTextMessageAsync(message.Chat.Id, "м ...");
 
-                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                    await Task.Delay(1000);
+                       await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                       await Task.Delay(1000);
 
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "ы ...");
+                       await _bot.SendTextMessageAsync(message.Chat.Id, "ы ...");
 
-                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                    await Task.Delay(1000);
+                       await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                       await Task.Delay(1000);
 
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "л ...");
+                       await _bot.SendTextMessageAsync(message.Chat.Id, "л ...");
 
-                    await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-                    await Task.Delay(1000);
+                       await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                       await Task.Delay(1000);
 
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "о ...");
-                }
-            } */
+                       await _bot.SendTextMessageAsync(message.Chat.Id, "о ...");
+                   }
+               } */
             else if (message.Text.ToLowerInvariant().Contains("спеть про стаканы"))
             {
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
@@ -247,10 +247,10 @@ namespace DjigurdaBotWs.Services
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Кстати, зацени, какую фоточку котика я нашел!", replyToMessageId: message.MessageId);
                 await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.UploadPhoto);
-                using (var memoryStream = new MemoryStream(new WebClient().DownloadData("http://thecatapi.com/api/images/get?format=src&type=gif")))
+                using (var memoryStream = new MemoryStream(new WebClient().DownloadData("http://thecatapi.com/api/images/get?format=src")))
                 {
                     var filename = $"{Guid.NewGuid().ToString().ToLower()}.gif";
-                    var fileToSend = new FileToSend() { Filename = filename, Content = memoryStream };
+                    var fileToSend = new FileToSend { Filename = filename, Content = memoryStream };
                     await _bot.SendPhotoAsync(message.Chat.Id, fileToSend);
                 }
             }
