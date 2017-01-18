@@ -20,15 +20,9 @@ namespace DjigurdaBotWs.Services
 
         public bool ContainsBadWords(string text)
         {
-            foreach(var badword in BadWords)
-            {
-                if (text.Contains(badword))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            var punctuation = text.Where(char.IsPunctuation).Distinct().ToArray();
+            var words = text.Split().Select(x => x.Trim(punctuation));
+            return words.Intersect(BadWords).Any();
         }
     }
 }
