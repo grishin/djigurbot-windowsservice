@@ -72,8 +72,14 @@ namespace DjigurdaBotWs
             registry.Schedule(() =>
             {
                 _bot.SayMorningGreeting();
+                
             }).ToRunEvery(1).Weekdays().At(10, 0);
-            
+
+            registry.Schedule(() =>
+            {
+                _bot.SayBirthdayToday();
+            }).ToRunEvery(1).Days().At(10, 1);
+
             return registry;
         }
 
@@ -135,6 +141,7 @@ namespace DjigurdaBotWs
             container.Register<IWaterService, WaterService>(Lifestyle.Singleton);
             container.Register<IQuoteService, QuoteService>(Lifestyle.Singleton);
             container.Register<IObsceneService, ObsceneService>(Lifestyle.Singleton);
+            container.Register<IBirthdayService, BirthdayService>(Lifestyle.Singleton);
 
             container.Verify();
             return container;

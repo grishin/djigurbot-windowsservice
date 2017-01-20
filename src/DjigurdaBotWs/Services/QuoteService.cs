@@ -16,24 +16,25 @@ namespace DjigurdaBotWs.Services
 
     public class QuoteService : IQuoteService
     {
+        private static HttpClient HttpClient = new HttpClient
+        {
+            BaseAddress = new Uri("http://api.forismatic.com/api/1.0/")
+        };
+
         public Quote GetRandomQuote()
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://api.forismatic.com/api/1.0/");
-                var result = client.GetAsync("?method=getQuote&format=json&lang=ru").Result;
-                string resultContent = result.Content.ReadAsStringAsync().Result;
-                
-                var resultJsonObject = JObject.Parse(resultContent);
-                string text = resultJsonObject["quoteText"].ToString();
-                string author = resultJsonObject["quoteAuthor"].ToString();
+            var result = HttpClient.GetAsync("?method=getQuote&format=json&lang=ru").Result;
+            string resultContent = result.Content.ReadAsStringAsync().Result;
 
-                return new Quote
-                {
-                    Author = author,
-                    Text = text
-                };
-            }
+            var resultJsonObject = JObject.Parse(resultContent);
+            string text = resultJsonObject["quoteText"].ToString();
+            string author = resultJsonObject["quoteAuthor"].ToString();
+
+            return new Quote
+            {
+                Author = author,
+                Text = text
+            };
         }
     }
 }

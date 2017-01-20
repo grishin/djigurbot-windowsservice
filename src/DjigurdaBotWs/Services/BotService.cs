@@ -17,6 +17,7 @@ namespace DjigurdaBotWs.Services
 
         void SayTest();
         void SayMorningGreeting();
+        void SayBirthdayToday();
     }
 
     public class BotService : IBotService
@@ -28,13 +29,20 @@ namespace DjigurdaBotWs.Services
         private readonly IWaterService _waterService;
         private readonly IQuoteService _quoteService;
         private readonly IObsceneService _obsceneService;
+        private readonly IBirthdayService _birthdayService;
         private readonly ILogger _messageLogger;
         private readonly ILogger _exceptionLogger;
         private readonly Random _random;
 
         private TelegramBotClient _bot;
 
-        public BotService(IToastService toastService, IWaterService waterService, IQuoteService quoteService, IObsceneService obsceneService)
+        public BotService(
+            IToastService toastService,
+            IWaterService waterService,
+            IQuoteService quoteService,
+            IObsceneService obsceneService,
+            IBirthdayService birthdayService
+            )
         {
             _toastService = toastService;
             _messageLogger = LogManager.GetLogger("message");
@@ -42,6 +50,8 @@ namespace DjigurdaBotWs.Services
             _waterService = waterService;
             _quoteService = quoteService;
             _obsceneService = obsceneService;
+            _birthdayService = birthdayService;
+
             _random = new Random();
         }
 
@@ -88,10 +98,6 @@ namespace DjigurdaBotWs.Services
 
                 await _bot.SendTextMessageAsync(message.Chat.Id, _toastService.GetRandomToast());
             }
-         /*   else if (messageTextLowered.Contains("костя"))
-            {
-                await _bot.SendTextMessageAsync(message.Chat.Id, "Костя крутой!");
-            } */
             else if (messageTextLowered.Contains("вода сколько"))
             {
                 var bottlesCount = _waterService.GetBottlesCount();
@@ -122,14 +128,6 @@ namespace DjigurdaBotWs.Services
                 await _bot.SendTextMessageAsync(message.Chat.Id,
                     $"Мой повелитель, добрые вести! Запасы пополнены. На складах находится {bottlesCount} бутылей воды.");
             }
-            /*else if (messageTextLowered.Contains("ааа") )
-            {
-                await _bot.SendTextMessageAsync(message.Chat.Id, "АААААААААААААААААААААААА!!!");
-            }
-            else if (messageTextLowered.Contains("цитата сказать"))
-            {
-                await SayRandomQuoteAsync(message);
-            } 
             else if (messageTextLowered.Contains("артемий"))
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Артемий божественен!");
@@ -140,9 +138,8 @@ namespace DjigurdaBotWs.Services
             }
             else if (messageTextLowered.Contains("доброе утро"))
             {
-                await
-                    _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
-            } */
+                await  _bot.SendTextMessageAsync(message.Chat.Id, $"И тебе наидобрейшего утра, {message.From.FirstName}!");
+            } 
             else if (message.Text.StartsWith("/writeFood"))
             {
                 await _bot.SendTextMessageAsync(FoodChatId, message.Text.Replace("/writeFood", "").Trim());
@@ -255,23 +252,11 @@ namespace DjigurdaBotWs.Services
                 }
             }
 
-            if (_obsceneService.ContainsBadWords(messageTextLowered) && _random.Next(10) == 0)
+            if (_obsceneService.ContainsBadWords(messageTextLowered) && _random.Next(2) == 0)
             {
                 await _bot.SendTextMessageAsync(message.Chat.Id, "Извольте не материться! Здесь же дамы!!");
             }
 
-        }
-
-        private async Task SayRandomQuoteAsync(Message message)
-        {
-            await _bot.SendTextMessageAsync(message.Chat.Id, "Наступает время унылых, неинтересных и демотивирующих цитат!");
-
-            await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
-            await Task.Delay(2000);
-
-            var quote = _quoteService.GetRandomQuote();
-
-            await _bot.SendTextMessageAsync(message.Chat.Id, quote.Text + "\n" + quote.Author);
         }
 
         public void SayMorningGreeting()
@@ -287,6 +272,19 @@ namespace DjigurdaBotWs.Services
                 var quote = _quoteService.GetRandomQuote();
 
                 await _bot.SendTextMessageAsync(FoodChatId, quote.Text + "\n" + quote.Author);
+            });
+            task.Wait();
+        }
+
+        public void SayBirthdayToday()
+        {
+            var task = Task.Run(async () =>
+            {
+                var birthdayBoys = await _birthdayService.GetBirthdayBoysForTodayAsync();
+                foreach (var birthdayBoy in birthdayBoys)
+                {
+                    await _bot.SendTextMessageAsync(FoodChatId, $"Урааа!!! Сегодня день рождения у {birthdayBoy}!! Сердечно поздравляю!");
+                }
             });
             task.Wait();
         }

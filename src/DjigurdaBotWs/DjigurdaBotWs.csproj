@@ -96,6 +96,7 @@
     <Compile Include="Models\Quote.cs" />
     <Compile Include="Repositories\IWaterRepository.cs" />
     <Compile Include="Repositories\WaterFileRepository.cs" />
+    <Compile Include="Services\BirthdayService.cs" />
     <Compile Include="Services\BotService.cs" />
     <Compile Include="Services\ObsceneService.cs" />
     <Compile Include="Services\QuoteService.cs" />
